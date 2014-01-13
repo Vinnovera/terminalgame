@@ -21,15 +21,24 @@ module.exports = function() {
 			case 'i':
 		   		callback('Inventory:');
 		   		break;
-		   	case 'h':
-	   			callback('display help');
-	   			break;
 	   		case 'o':
 	   			var test = publ.displayOptions();
 	   			callback(test);
 	   			break;
+	   		case 'look':
+	   			callback('looking');//get location description
+	   			break;
+	   		case 'examine':
+	   			callback('examining'); //get item examine
+	   			break;
+	   		case 'use':
+	   			callback('using'); //get item use
+	   			break;
+	   		case 'take':
+	   			callback('taking'); //player save item
+	   			break;
 			default:
-				callback(response);
+				callback("You're doing it wrong");
 				break;
 		}
 	}
