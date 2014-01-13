@@ -1,10 +1,11 @@
 module.exports = function() {
-	var publ 	= this,
-		priv 	= {},
-		items	= '',
-		db 		= require("../db");
+	var publ 			= this,
+		priv 			= {},
+		items			= '',
+		locationIntro	= '',
+		db 				= require("../db");
 		
-		publ.getLocationItem = function(locationName, callback) {
+		publ.getLocation = function(locationName, callback) {
 			callback = callback || function () {};
 			
 			priv.getFromDb(locationName, callback);
@@ -21,10 +22,11 @@ module.exports = function() {
 			  	if(locations[i].name != "" && locations[i].name == locationName) {
 			  		//console.log('Item avalible: ' + locations[i].item);
 			  		items = locations[i].item;
-			  		
+			  		locationIntro = locations[i].intro
 			  	}
 			  }
-			  callback('Avalible item: ' + items);
+			  //console.log(locationIntro);
+			  callback(locations);
 			});
 		}
 };

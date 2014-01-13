@@ -1,3 +1,3 @@
-{ "name" : "hallway", "item" : "shoe", "description" : ""}
-{ "name" : "kitchen", "item" : "battery", "description" : "" }
-{ "name" : "basement", "item" : "goat", "description" : "" }
+{ "name" : "hallway", "item" : "shoe", "intro" : "You are standing in a hallway. At the end you can see a staircase leading down into the basement. To your right you can smell new baked cookies."}
+{ "name" : "kitchen", "item" : "battery", "intro" : "This clearly is a kitchen. There is a cookiedough sented candle lit on the kitchen table." }
+{ "name" : "basement", "item" : "goat", "intro" : "It's too dark to see anything. You can sense the smell of wet stone and something foul." }
