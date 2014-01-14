@@ -1,7 +1,7 @@
 module.exports = new function() {
 	var publ			= this,
 		priv			= {},
-		firstLocation	= 'hallway',
+		firstLocation	= 'basement',
 		
 		//modules
 		location 	= new (require(process.cwd() + '/models/location')),
@@ -14,7 +14,7 @@ module.exports = new function() {
 	
 	//Constructor
 	publ.init = function() {
-		console.log('running Intro');
+		console.log('running Basement');
 		priv.start();
 		//priv.promt();
 	}
@@ -34,7 +34,7 @@ module.exports = new function() {
 		var state = interface.getState();
 		
 		promptly.prompt(state.str, function (err, value) {
-   			state.func(value, 'intro', function(response){
+				state.func(value, 'intro', function(response){
 		    	if(typeof response != 'undefined') {
 			    	console.log(response);
 			    	priv.promt();
