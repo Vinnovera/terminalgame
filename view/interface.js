@@ -7,8 +7,10 @@ module.exports = function() {
 		
 		location 	= new (require(process.cwd() + '/models/location')),
 		
-		basement	= require(process.cwd() + "/controllers/basement");
+		hallway		= require(process.cwd() + "/controllers/intro");
 	
+	//First time send location {}
+	//Otherwise send getResponse
 	publ.getState = function() {
 		if(value == 'anything') {
 			return {'str' : '>', 'func' : publ.getResponse}
@@ -59,11 +61,13 @@ module.exports = function() {
 	
 	priv.movement = function(direction, currentView, callback) {
 		callback = callback || function () {};
-		
+		console.log(currentView);
 		switch(direction) {
 			case 'n':
 				if(currentView == 'intro') {
-					callback(basement.init()); //load basement
+					currentView = 'basement';
+					return 'going to basement'
+					break;
 				} else {
 					return 'staying put';
 				}

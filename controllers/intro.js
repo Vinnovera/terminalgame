@@ -1,27 +1,26 @@
 module.exports = new function() {
 	var publ			= this,
 		priv			= {},
-		firstLocation	= 'hallway',
-		
-		//modules
+		thisLocation	= 'hallway',
+
 		location 	= new (require(process.cwd() + '/models/location')),
 		
 		db 			= require(process.cwd() + "/db"),
 		promptly	= require("promptly"),
 		
-		interface 	= new (require(process.cwd() + "/view/interface")),
+		interface 	= require(process.cwd() + "/view/staticinterface"),
 		player		= require(process.cwd() + "/models/staticplayer");
 	
 	//Constructor
 	publ.init = function() {
 		console.log('running Intro');
 		priv.start();
-		//priv.promt();
 	}
 	
+	//Print location name + intro text and promt
 	priv.start = function() {
 		var state = interface.getState();
-		state.func(firstLocation, function(response){
+		state.func(thisLocation, function(response){
 			var introText 	= response[0].intro,
 				name		= priv.capitaliseFirstLetter(response[0].name);
 				
@@ -29,10 +28,13 @@ module.exports = new function() {
 			priv.promt();
 		});
 	}
-
+	
+	//Promt and send input + active location
+	//Log response
+	//Call self
 	priv.promt = function() {
 		var state = interface.getState();
-		
+		console.log('getstate');
 		promptly.prompt(state.str, function (err, value) {
    			state.func(value, 'intro', function(response){
 		    	if(typeof response != 'undefined') {
@@ -43,15 +45,8 @@ module.exports = new function() {
 		});
 	}
 	
+	//Capitalise
 	priv.capitaliseFirstLetter = function(string) {
 	    return string.charAt(0).toUpperCase() + string.slice(1);
 	}
-	
-	/*priv.validator = function (value) {
-	    if (value.length < 2) {
-	        throw new Error('Min length of 2');
-	    }
-	
-	    return value;
-	};*/
 }
