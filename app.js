@@ -1,6 +1,6 @@
 var express 	= require('express'),
 	app 		= express(),
-	intro 	 	= require('./controllers/intro'),
+	room 	 	= require('./controllers/room'),
 	db 			= require("./db"),
 	promptly	= require("promptly");
 
@@ -23,7 +23,7 @@ promptly.prompt('Location: ', function (err, value) {
 */
 //Controller
 //var index = require('./controllers/index');
-intro.init();
+room.init();
 //console.log(player.index);
 //player.index();
 	

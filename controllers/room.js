@@ -1,7 +1,7 @@
 module.exports = new function() {
 	var publ			= this,
 		priv			= {},
-		thisLocation	= 'hallway',
+		thisLocation	= '',
 		
 		//modules
 		location 	= new (require(process.cwd() + '/models/location')),
@@ -13,15 +13,20 @@ module.exports = new function() {
 		player		= require(process.cwd() + "/models/staticplayer");
 	
 	//Constructor
-	publ.init = function() {
-		console.log('running Intro');
-		publ.start('startup');
+	publ.init = function(room) {
+		//First time running: default room Hallway
+		if(typeof room == 'undefined')
+			room = 'hallway';
+			
+		console.log('running ' + room);
+		
+		thisLocation = room;
+		publ.start('initRoom');
 	}
 	
 	//Print location name + intro text and promt
 	publ.start = function(init) {
 		var state = interface.getState(init);
-		
 		state.func(thisLocation, function(response){
 			var introText 	= response[0].intro,
 				name		= priv.capitaliseFirstLetter(response[0].name);
@@ -37,7 +42,7 @@ module.exports = new function() {
 		var state = interface.getState();
 		
 		promptly.prompt(state.str, function (err, value) {
-   			state.func(value, 'intro', function(response){
+   			state.func(value, thisLocation, function(response){
 		    	if(typeof response != 'undefined') {
 			    	console.log(response);
 			    	priv.promt();

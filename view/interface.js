@@ -4,14 +4,14 @@ module.exports = function() {
 		currentView	= '',
 		broken		= false,
 		
-		location 	= new (require(process.cwd() + '/models/location')),
+		location 	= new (require(process.cwd() + '/models/location'));
 		
-		hallway		= require(process.cwd() + "/controllers/intro");
+		//room		= require(process.cwd() + "/controllers/intro");
 	
 	//First time send location {}
 	//Otherwise send getResponse
 	publ.getState = function(value) {
-		if(value == 'startup') {
+		if(value == 'initRoom') {
 			return {'str': 'Location', 'func': location.getLocation};
 			
 		} else {
@@ -61,27 +61,30 @@ module.exports = function() {
 	priv.movement = function(direction, currentView, callback) {
 		callback = callback || function () {};
 		
-		var hallway		= require(process.cwd() + "/controllers/intro");
+		var room = require(process.cwd() + "/controllers/room");
 		//console.log(currentView);
 		switch(direction) {
 			case 'n':
-				if(currentView == 'intro') {
-					//currentView = 'basement';
-					callback(hallway.init());
+				if(currentView == 'hallway') {
+					currentView = 'basement';
+					callback(room.init('basement'));
 					break;
 				} else {
 					return 'staying put';
 				}
 				break;
 			case 's':
-				if(currentView == 'intro') {
+				if(currentView == 'hallway') {
 					return "The door is locked, you can't go that way.";
+				} else if (currentView == 'basement') {
+					currentView = 'hallway';
+					callback(room.init('hallway'));
 				} else {
 					return 'staying put';
 				}
 				break;
 			case 'w':
-				if(currentView == 'intro') {
+				if(currentView == 'hallway') {
 					if(!broken) {
 						broken = true;
 						return "You walked into a wall and broke your nose.";
@@ -93,7 +96,7 @@ module.exports = function() {
 				}
 				break;
 			case 'e':
-				if(currentView == 'intro') {
+				if(currentView == 'hallway') {
 					return "Going to the kitchen"; //load kitchen
 				} else {
 					return 'staying put';
