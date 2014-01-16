@@ -3,6 +3,7 @@ module.exports = function() {
 		priv 		= {},
 		currentView	= '',
 		broken		= false,
+		smashed		= 0,
 		
 		location 	= new (require(process.cwd() + '/models/location'));
 		
@@ -89,7 +90,13 @@ module.exports = function() {
 						broken = true;
 						return "You walked into a wall and broke your nose.";
 					} else {
-						return "You smashed your nose again. Stop it.";
+						smashed++;
+						if(smashed >= 4) {
+							console.log('You died, I told you to stop stupid <.<');
+							return 'quit';
+						} else {
+							return "You smashed your nose again. Stop it.";
+						}
 					}
 				} else if (currentView == 'kitchen') {
 					currentView = 'hallway';
@@ -102,6 +109,8 @@ module.exports = function() {
 				if(currentView == 'hallway') {
 					currentView = 'kitchen';
 					callback(room.init('kitchen'));
+				} else if (currentView == 'basement'){
+					return 'quit';
 				} else {
 					return 'staying put';
 				}

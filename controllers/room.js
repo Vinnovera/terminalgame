@@ -44,8 +44,12 @@ module.exports = new function() {
 		promptly.prompt(state.str, function (err, value) {
    			state.func(value, thisLocation, function(response){
 		    	if(typeof response != 'undefined') {
-			    	console.log(response);
-			    	priv.promt();
+			    	if(response === 'quit') {
+			    		process.exit(0);
+			    	} else {
+				    	console.log(response);
+				    	priv.promt();
+			    	}
 		    	}
 		    });		    
 		});
