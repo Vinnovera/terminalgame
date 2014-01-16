@@ -62,7 +62,7 @@ module.exports = function() {
 		callback = callback || function () {};
 		
 		var room = require(process.cwd() + "/controllers/room");
-		//console.log(currentView);
+	
 		switch(direction) {
 			case 'n':
 				if(currentView == 'hallway') {
@@ -91,13 +91,17 @@ module.exports = function() {
 					} else {
 						return "You smashed your nose again. Stop it.";
 					}
+				} else if (currentView == 'kitchen') {
+					currentView = 'hallway';
+					callback(room.init('hallway'));
 				} else {
 					return 'staying put';
 				}
 				break;
 			case 'e':
 				if(currentView == 'hallway') {
-					return "Going to the kitchen"; //load kitchen
+					currentView = 'kitchen';
+					callback(room.init('kitchen'));
 				} else {
 					return 'staying put';
 				}
