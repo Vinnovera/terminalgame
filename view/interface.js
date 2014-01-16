@@ -1,7 +1,6 @@
 module.exports = function() {
 	var publ 		= this,
 		priv 		= {},
-		value 		= '',
 		currentView	= '',
 		broken		= false,
 		
@@ -11,18 +10,18 @@ module.exports = function() {
 	
 	//First time send location {}
 	//Otherwise send getResponse
-	publ.getState = function() {
-		if(value == 'anything') {
-			return {'str' : '>', 'func' : publ.getResponse}
-		} else {
-			value = 'anything';
+	publ.getState = function(value) {
+		if(value == 'startup') {
 			return {'str': 'Location', 'func': location.getLocation};
+			
+		} else {
+			return {'str' : '>', 'func' : publ.getResponse}
 		}
 	}
 	
 	publ.getResponse = function(response, currentView, callback) {
 		callback = callback || function () {};
-		
+
 		switch (response) {
 			case 'i':
 		   		callback('Inventory:');
@@ -61,12 +60,14 @@ module.exports = function() {
 	
 	priv.movement = function(direction, currentView, callback) {
 		callback = callback || function () {};
-		console.log(currentView);
+		
+		var hallway		= require(process.cwd() + "/controllers/intro");
+		//console.log(currentView);
 		switch(direction) {
 			case 'n':
 				if(currentView == 'intro') {
-					currentView = 'basement';
-					return 'going to basement'
+					//currentView = 'basement';
+					callback(hallway.init());
 					break;
 				} else {
 					return 'staying put';
