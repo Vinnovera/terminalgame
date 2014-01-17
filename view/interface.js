@@ -5,7 +5,8 @@ module.exports = function() {
 		broken		= false,
 		smashed		= 0,
 		
-		location 	= new (require(process.cwd() + '/models/location'));
+		location 	= new (require(process.cwd() + '/models/location')),
+		player		= require(process.cwd() + '/models/staticplayer');
 		
 		//room		= require(process.cwd() + "/controllers/intro");
 	
@@ -14,7 +15,6 @@ module.exports = function() {
 	publ.getState = function(value) {
 		if(value == 'initRoom') {
 			return {'str': 'Location', 'func': location.getLocation};
-			
 		} else {
 			return {'str' : '>', 'func' : publ.getResponse}
 		}
@@ -23,6 +23,8 @@ module.exports = function() {
 	publ.getResponse = function(response, currentView, callback) {
 		callback = callback || function () {};
 
+		var room = require(process.cwd() + "/controllers/room");
+		
 		switch (response) {
 			case 'i':
 		   		callback('Inventory:');
@@ -31,7 +33,8 @@ module.exports = function() {
 	   			callback(publ.displayOptions());
 	   			break;
 	   		case 'look':
-	   			callback('looking');//get location description
+	   			//console.log(room.getAvalibleItem());
+	   			callback(room.getAvalibleItem(currentView));//get location description
 	   			break;
 	   		case 'examine':
 	   			callback('examining'); //get item examine
@@ -48,6 +51,8 @@ module.exports = function() {
 	   		case 'e':
 	   			callback(priv.movement(response, currentView));
 	   			break;
+	   		case 'quit':
+	   			callback(response);
 			default:
 				callback("You're doing it wrong");
 				break;
@@ -92,7 +97,7 @@ module.exports = function() {
 					} else {
 						smashed++;
 						if(smashed >= 4) {
-							console.log('You died, I told you to stop stupid <.<');
+							console.log('You died, I told you to stop it stupid <.<');
 							return 'quit';
 						} else {
 							return "You smashed your nose again. Stop it.";

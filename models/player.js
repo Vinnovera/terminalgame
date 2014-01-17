@@ -1,11 +1,19 @@
 module.exports = function() {
 	var publ 		= this,
 		priv 		= {},
-		inventory	= {};
-		//action		= ['walk', 'eat', 'examine'];
+		inventory	= {},
+		items		= ['goat', 'shoe'];
 		
-		publ.index = function() {
-			var item 	= new require(process.cwd() + '/models/staticitem'),
-				action 	= new require(process.cwd() + '/models/action');
-		}
+	publ.index = function() {
+		
+	}
+		
+	publ.addItem = function(item) {
+		items.push(item);
+		console.log(items);
+	}
+	
+	publ.getInventory = function() {
+		return items;
+	}
 };

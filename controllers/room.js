@@ -21,6 +21,7 @@ module.exports = new function() {
 		console.log('running ' + room);
 		
 		thisLocation = room;
+		
 		publ.start('initRoom');
 	}
 	
@@ -58,5 +59,24 @@ module.exports = new function() {
 	//Capitalise
 	priv.capitaliseFirstLetter = function(string) {
 	    return string.charAt(0).toUpperCase() + string.slice(1);
+	}
+	
+	//Return item
+	publ.getAvalibleItem = function(room) {
+		var playerInventory = player.getInventory(),
+			locationItem	= '',
+			itemInInventory = false;
+		
+		location.getItem(room, function(item) {
+			locationItem = item;
+			
+			for (var i in playerInventory) {
+				if(playerInventory[i] === locationItem) {
+					itemInInventory = true;
+				}
+			}
+			console.log(itemInInventory);
+			priv.promt();
+		});
 	}
 }
