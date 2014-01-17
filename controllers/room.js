@@ -61,8 +61,20 @@ module.exports = new function() {
 	    return string.charAt(0).toUpperCase() + string.slice(1);
 	}
 	
+	publ.getRoomState = function(room, callback) {
+		callback = callback || function () {};
+		
+		priv.getAvalibleItem(room, function(roomHasItem) {
+			console.log(roomHasItem);
+			priv.promt();
+		});
+		
+	}
+	
 	//Return item
-	publ.getAvalibleItem = function(room) {
+	priv.getAvalibleItem = function(room, callback) {
+		callback = callback || function () {};
+		
 		var playerInventory = player.getInventory(),
 			locationItem	= '',
 			itemInInventory = false;
@@ -75,8 +87,7 @@ module.exports = new function() {
 					itemInInventory = true;
 				}
 			}
-			console.log(itemInInventory);
-			priv.promt();
+			callback(itemInInventory);
 		});
 	}
 }

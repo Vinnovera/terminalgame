@@ -33,8 +33,7 @@ module.exports = function() {
 	   			callback(publ.displayOptions());
 	   			break;
 	   		case 'look':
-	   			//console.log(room.getAvalibleItem());
-	   			callback(room.getAvalibleItem(currentView));//get location description
+	   			callback(room.getRoomState(currentView));//get avalible item + location description
 	   			break;
 	   		case 'examine':
 	   			callback('examining'); //get item examine
