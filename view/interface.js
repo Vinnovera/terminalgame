@@ -7,8 +7,6 @@ module.exports = function() {
 		
 		location 	= new (require(process.cwd() + '/models/location')),
 		player		= require(process.cwd() + '/models/staticplayer');
-		
-		//room		= require(process.cwd() + "/controllers/intro");
 	
 	//First time send location {}
 	//Otherwise send getResponse
@@ -42,7 +40,7 @@ module.exports = function() {
 	   			callback('using'); //get item use
 	   			break;
 	   		case 'take':
-	   			callback('taking'); //player save item
+	   			callback(player.addItem(room, currentView));
 	   			break;
 	   		case 'n':
 	   		case 's':

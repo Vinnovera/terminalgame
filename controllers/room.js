@@ -10,7 +10,9 @@ module.exports = new function() {
 		promptly	= require("promptly"),
 		
 		interface 	= new (require(process.cwd() + "/view/interface")),
-		player		= require(process.cwd() + "/models/staticplayer");
+		player		= require(process.cwd() + "/models/staticplayer"),
+		
+		async		= require('async');
 	
 	//Constructor
 	publ.init = function(room) {
@@ -33,13 +35,13 @@ module.exports = new function() {
 				name		= priv.capitaliseFirstLetter(response[0].name);
 				
 			console.log('\n' + name + '\n' + introText);
-			priv.promt();
+			publ.promt();
 		});
 	}
 	
 	//Promt and send input + active location
 	//Log response
-	priv.promt = function() {
+	publ.promt = function() {
 		var state = interface.getState();
 		
 		promptly.prompt(state.str, function (err, value) {
@@ -49,7 +51,7 @@ module.exports = new function() {
 			    		process.exit(0);
 			    	} else {
 				    	console.log(response);
-				    	priv.promt();
+				    	publ.promt();
 			    	}
 		    	}
 		    });		    
@@ -64,30 +66,35 @@ module.exports = new function() {
 	publ.getRoomState = function(room, callback) {
 		callback = callback || function () {};
 		
-		priv.getAvalibleItem(room, function(roomHasItem) {
-			console.log(roomHasItem);
-			priv.promt();
+		publ.getAvalibleItem(room, function(roomHasItem, item) {
+			
+			if(roomHasItem) {
+				console.log(item);
+			} else {
+				console.log('no item');
+			}
+			publ.promt();
 		});
 		
 	}
 	
-	//Return item
-	priv.getAvalibleItem = function(room, callback) {
+	//Return item if not in player inventory
+	publ.getAvalibleItem = function(room, callback) {
 		callback = callback || function () {};
 		
 		var playerInventory = player.getInventory(),
 			locationItem	= '',
-			itemInInventory = false;
+			itemInInventory = true;
 		
 		location.getItem(room, function(item) {
 			locationItem = item;
 			
 			for (var i in playerInventory) {
 				if(playerInventory[i] === locationItem) {
-					itemInInventory = true;
+					itemInInventory = false;
 				}
 			}
-			callback(itemInInventory);
+			callback(itemInInventory, item);
 		});
 	}
 }
