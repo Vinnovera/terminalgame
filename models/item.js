@@ -2,16 +2,39 @@ module.exports = function() {
 	var publ 	= this,
 		priv 	= {},
 		db 		= require("../db"),
-		itemType= 'bottle';
+		player	= require(process.cwd() + '/models/staticplayer'),
+		
+		playerInventory = [],
+		isInInventory	= false;
 	
-	
-	publ.getItem = function(callback) {
+	publ.examine = function(response, callback) {
 		callback = callback || function () {};
 		
-		priv.getFromDb(callback, itemType);
+		var item = '';
+		
+		for (var i in response) {
+			if(response[i] !== 'examine') {
+				item = response[i];
+			}
+		}
+		
+		playerInventory = player.getInventory();
+		for (var i in playerInventory) {
+			if(playerInventory[i] == item) {
+				publ.getItem(item, function(items) {
+					callback(items[0].examine);
+				});
+			}
+		}
 	}
 	
-	priv.getFromDb = function(callback, itemType) {
+	publ.getItem = function(itemType, callback) {
+		callback = callback || function () {};
+		
+		priv.getFromDb(itemType, callback);
+	}
+	
+	priv.getFromDb = function(itemType, callback) {
 		callback = callback || function () {};
 		
 		db.items.find({name: itemType}, function(err, items) {

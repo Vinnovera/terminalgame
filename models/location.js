@@ -3,12 +3,14 @@ module.exports = function() {
 		priv 			= {},
 		db 				= require("../db");
 		
+		//Returns location object
 		publ.getLocation = function(locationName, callback) {
 			callback = callback || function () {};
 			
 			priv.getFromDb(locationName, callback);
 		}
 		
+		//Returns location item
 		publ.getItem = function(locationName, callback) {
 			callback = callback || function () {};
 			
@@ -19,6 +21,7 @@ module.exports = function() {
 			});
 		}
 		
+		//Returns locations from DB
 		priv.getFromDb = function(locationName, callback) {
 			callback = callback || function () {};
 			

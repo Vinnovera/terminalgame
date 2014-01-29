@@ -1,3 +1,6 @@
-{ "name" : "bottle", "itemId" : "1" }
-{ "name" : "nail", "itemId" : "2" }
-{ "name" : "rope", "itemId" : "3" }
+{ "name" : "shoe", "description" : "There is a shoe in the shoe rack.", "examine" : "It's a brown shoe that has been worn on grass." }
+{ "name" : "goat", "description" : "", "examine" : "" }
+{ "name" : "battery", "description" : "On the counter there is a battery.", "examine" : "This is an ordinary battery." }
+{ "name" : "flashlight", "description" : "", "examine" : "" }
+{ "name" : "nail", "description" : "5", "examine" : "" }
+{ "name" : "rope", "description" : "6", "examine" : "" }

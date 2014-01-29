@@ -2,6 +2,7 @@ module.exports = new function() {
 	var publ			= this,
 		priv			= {},
 		thisLocation	= '',
+		introText		= '',
 		
 		//modules
 		location 	= new (require(process.cwd() + '/models/location')),
@@ -11,8 +12,7 @@ module.exports = new function() {
 		
 		interface 	= new (require(process.cwd() + "/view/interface")),
 		player		= require(process.cwd() + "/models/staticplayer"),
-		
-		async		= require('async');
+		item		= new (require(process.cwd() + "/models/item"));
 	
 	//Constructor
 	publ.init = function(room) {
@@ -35,13 +35,22 @@ module.exports = new function() {
 				name		= priv.capitaliseFirstLetter(response[0].name);
 				
 			console.log('\n' + name + '\n' + introText);
-			publ.promt();
+			priv.promt();
+		});
+	}
+	
+	//Returns current room object
+	priv.getRoomFromDb = function(room, callback) {
+		callback = callback || function () {};
+		
+		location.getLocation(room, function(locations) {
+			callback(locations[0]);
 		});
 	}
 	
 	//Promt and send input + active location
 	//Log response
-	publ.promt = function() {
+	priv.promt = function() {
 		var state = interface.getState();
 		
 		promptly.prompt(state.str, function (err, value) {
@@ -51,7 +60,7 @@ module.exports = new function() {
 			    		process.exit(0);
 			    	} else {
 				    	console.log(response);
-				    	publ.promt();
+				    	priv.promt();
 			    	}
 		    	}
 		    });		    
@@ -63,17 +72,20 @@ module.exports = new function() {
 	    return string.charAt(0).toUpperCase() + string.slice(1);
 	}
 	
+	//Return current state of the room
 	publ.getRoomState = function(room, callback) {
 		callback = callback || function () {};
 		
-		publ.getAvalibleItem(room, function(roomHasItem, item) {
-			
-			if(roomHasItem) {
-				console.log(item);
-			} else {
-				console.log('no item');
-			}
-			publ.promt();
+		publ.getAvalibleItem(room, function(roomHasItem, currentItem) {
+			priv.getRoomFromDb(room, function(locations) {
+				if(roomHasItem) {
+					item.getItem(currentItem, function(itemObj) {
+						callback(locations.intro + ' ' + itemObj[0].description);
+					});
+				} else {
+					callback(locations.intro);
+				}
+			});			
 		});
 		
 	}

@@ -1,12 +1,14 @@
 module.exports = function() {
-	var publ 		= this,
-		priv 		= {},
-		currentView	= '',
-		broken		= false,
-		smashed		= 0,
+	var publ 			= this,
+		priv 			= {},
+		currentView		= '',
+		broken			= false,
+		smashed			= 0,
+		splitResponse	= '',
 		
-		location 	= new (require(process.cwd() + '/models/location')),
-		player		= require(process.cwd() + '/models/staticplayer');
+		location 		= new (require(process.cwd() + '/models/location')),
+		player			= require(process.cwd() + '/models/staticplayer'),
+		item			= new (require(process.cwd() + "/models/item"));
 	
 	//First time send location {}
 	//Otherwise send getResponse
@@ -20,35 +22,48 @@ module.exports = function() {
 	
 	publ.getResponse = function(response, currentView, callback) {
 		callback = callback || function () {};
-
+		
+		if (response.indexOf("take") != -1 || response.indexOf("examine") != -1) {
+			splitResponse = response.split(" ");
+			response = splitResponse[0];
+		}
 		var room = require(process.cwd() + "/controllers/room");
 		
 		switch (response) {
 			case 'i':
-		   		callback('Inventory:');
+		   		var inventory = player.getInventory().toString();
+		   		callback('Inventory: ' + inventory);//list player inventory items
 		   		break;
-	   		case 'o':
+	   		case 'o'://list user options
 	   			callback(publ.displayOptions());
 	   			break;
-	   		case 'look':
-	   			callback(room.getRoomState(currentView));//get avalible item + location description
+	   		case 'look'://get avalible item + location description
+	   			room.getRoomState(currentView, function(desc) {
+	   				callback(desc);
+	   			});
 	   			break;
-	   		case 'examine':
-	   			callback('examining'); //get item examine
+	   		case 'examine': //call item.examine return examine text
+	   			item.examine(splitResponse, function(item) {
+	   				callback(item);
+	   			});
 	   			break;
 	   		case 'use':
 	   			callback('using'); //get item use
 	   			break;
-	   		case 'take':
-	   			callback(player.addItem(room, currentView));
+	   		case 'take'://add item to player inventory
+	   			player.addItem(room, currentView, splitResponse, function(itemAdded) {
+	   				callback(itemAdded);
+	   			});
 	   			break;
 	   		case 'n':
 	   		case 's':
 	   		case 'w':
-	   		case 'e':
-	   			callback(priv.movement(response, currentView));
+	   		case 'e'://move around
+	   			priv.movement(room, response, currentView, function(roomDesc) {
+	   				callback(roomDesc);
+	   			});
 	   			break;
-	   		case 'quit':
+	   		case 'quit'://terminate game
 	   			callback(response);
 			default:
 				callback("You're doing it wrong");
@@ -61,11 +76,9 @@ module.exports = function() {
 		return arr;
 	}
 	
-	priv.movement = function(direction, currentView, callback) {
+	priv.movement = function(room, direction, currentView, callback) {
 		callback = callback || function () {};
 		
-		var room = require(process.cwd() + "/controllers/room");
-	
 		switch(direction) {
 			case 'n':
 				if(currentView == 'hallway') {
@@ -73,38 +86,38 @@ module.exports = function() {
 					callback(room.init('basement'));
 					break;
 				} else {
-					return 'staying put';
+					callback('staying put');
 				}
 				break;
 			case 's':
 				if(currentView == 'hallway') {
-					return "The door is locked, you can't go that way.";
+					callback("The door is locked, you can't go that way.");
 				} else if (currentView == 'basement') {
 					currentView = 'hallway';
 					callback(room.init('hallway'));
 				} else {
-					return 'staying put';
+					callback('staying put');
 				}
 				break;
 			case 'w':
 				if(currentView == 'hallway') {
 					if(!broken) {
 						broken = true;
-						return "You walked into a wall and broke your nose.";
+						callback("You walked into a wall and broke your nose.");
 					} else {
 						smashed++;
 						if(smashed >= 4) {
 							console.log('You died, I told you to stop it stupid <.<');
-							return 'quit';
+							callback('quit');
 						} else {
-							return "You smashed your nose again. Stop it.";
+							callback("You smashed your nose again. Stop it.");
 						}
 					}
 				} else if (currentView == 'kitchen') {
 					currentView = 'hallway';
 					callback(room.init('hallway'));
 				} else {
-					return 'staying put';
+					callback('staying put');
 				}
 				break;
 			case 'e':
@@ -112,9 +125,9 @@ module.exports = function() {
 					currentView = 'kitchen';
 					callback(room.init('kitchen'));
 				} else if (currentView == 'basement'){
-					return 'quit';
+					callback('quit');
 				} else {
-					return 'staying put';
+					callback('staying put');
 				}
 				break;
 		}
