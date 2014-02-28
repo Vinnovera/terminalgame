@@ -95,17 +95,27 @@ module.exports = new function() {
 		callback = callback || function () {};
 		
 		var playerInventory = player.getInventory(),
-			locationItem	= '',
+			usedItems		= player.getUsedItems(),
+			itemIsUsed		= false,
 			itemInInventory = true;
 		
 		location.getItem(room, function(item) {
-			locationItem = item;
-			
-			for (var i in playerInventory) {
-				if(playerInventory[i] === locationItem) {
-					itemInInventory = false;
+			for (var i in usedItems) {
+				if(usedItems[i] === item) {
+					itemIsUsed = true;
 				}
 			}
+			
+			if(itemIsUsed){
+				itemInInventory = false;
+			} else {
+				for (var i in playerInventory) {
+					if(playerInventory[i] === item) {
+						itemInInventory = false;
+					}
+				}
+			}
+			console.log(itemInInventory);
 			callback(itemInInventory, item);
 		});
 	}

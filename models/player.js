@@ -3,20 +3,37 @@ module.exports = function() {
 		priv 		= {},
 		inventory	= {},
 		items		= ['flashlight'],
+		itemsUsed	= [],
+		
 		room		= require(process.cwd() + "/controllers/room");
 		
 	//check if room has item and add it to player items
 	//Add later: check if item is in response
 	publ.addItem = function(room, currentView, response, callback) {
 		callback = callback || function () {};
-		//items.push(item);
 		//var splitResponse = response.split(" "),
 		//response = splitResponse[0];
+		for(var i in itemsUsed) {
+			
+		}
 		
 		room.getAvalibleItem(currentView, function(roomHasItem, item) {
 			items.push(item);
 			callback(item + ' added to inventroy');
 		});
+	}
+	
+	publ.removeItem = function(item) {
+		// Find and remove item from an array
+		var i = items.indexOf(item);
+		if(i != -1) {
+			items.splice(i, 1);
+			itemsUsed.push(item);
+		}
+	}
+	
+	publ.getUsedItems = function() {
+		return itemsUsed;
 	}
 	
 	publ.getInventory = function() {

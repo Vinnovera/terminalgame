@@ -23,16 +23,16 @@ module.exports = function() {
 	publ.getResponse = function(response, currentView, callback) {
 		callback = callback || function () {};
 		
-		if (response.indexOf("take") != -1 || response.indexOf("examine") != -1) {
+		if (response.indexOf("take") != -1 || response.indexOf("examine") != -1 || response.indexOf("use") != -1) {
 			splitResponse = response.split(" ");
 			response = splitResponse[0];
 		}
 		var room = require(process.cwd() + "/controllers/room");
 		
 		switch (response) {
-			case 'i':
+			case 'i'://list player inventory items
 		   		var inventory = player.getInventory().toString();
-		   		callback('Inventory: ' + inventory);//list player inventory items
+		   		callback('Inventory: ' + inventory);
 		   		break;
 	   		case 'o'://list user options
 	   			callback(publ.displayOptions());
@@ -47,8 +47,10 @@ module.exports = function() {
 	   				callback(item);
 	   			});
 	   			break;
-	   		case 'use':
-	   			callback('using'); //get item use
+	   		case 'use'://get item use
+	   			item.use(splitResponse, function(using) {
+	   				callback(using); 
+	   			});
 	   			break;
 	   		case 'take'://add item to player inventory
 	   			player.addItem(room, currentView, splitResponse, function(itemAdded) {

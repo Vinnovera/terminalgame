@@ -10,7 +10,8 @@ module.exports = function() {
 	publ.examine = function(response, callback) {
 		callback = callback || function () {};
 		
-		var item = '';
+		var item  = '',
+			found = false;
 		
 		for (var i in response) {
 			if(response[i] !== 'examine') {
@@ -21,10 +22,49 @@ module.exports = function() {
 		playerInventory = player.getInventory();
 		for (var i in playerInventory) {
 			if(playerInventory[i] == item) {
+				found = true;
 				publ.getItem(item, function(items) {
-					callback(items[0].examine);
+					if(typeof items[0].examine !== 'undefined')
+						callback(items[0].examine);
+					else 
+						callback("Can't examine that item");
 				});
 			}
+		}
+		if (!found) {
+			callback(item + ' is not in your inventory');
+		}
+	}
+	
+	publ.use = function(response, callback) {
+		callback = callback || function () {};
+		
+		var item  = '',
+			found = false;
+		
+		for (var i in response) {
+			if(response[i] !== 'use') {
+				item = response[i];
+			}
+		}
+		
+		playerInventory = player.getInventory();
+		for (var i in playerInventory) {
+			if(playerInventory[i] == item) {
+				found = true;
+			}
+		}
+		if(found) {
+			if(item == "battery") {
+				for (var i in playerInventory) {
+					if(playerInventory[i] == 'flashlight') {
+						player.removeItem(item);
+						callback('The battery is now placed in the flashlight.');
+					}
+				}
+			}
+		} else {
+			callback(item + ' is not in your inventory');
 		}
 	}
 	
