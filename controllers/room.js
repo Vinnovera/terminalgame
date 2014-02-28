@@ -115,7 +115,6 @@ module.exports = new function() {
 					}
 				}
 			}
-			console.log(itemInInventory);
 			callback(itemInInventory, item);
 		});
 	}

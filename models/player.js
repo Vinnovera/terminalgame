@@ -15,11 +15,17 @@ module.exports = function() {
 		//response = splitResponse[0];
 		for(var i in itemsUsed) {
 			
-		}
+		}		
 		
 		room.getAvalibleItem(currentView, function(roomHasItem, item) {
-			items.push(item);
-			callback(item + ' added to inventroy');
+			var i = items.indexOf(item);
+			
+			if(i == -1) {
+				items.push(item);
+				callback(item + ' added to inventroy');
+			} else {
+				callback("There's nothing for you to take");
+			}
 		});
 	}
 	
