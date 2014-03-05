@@ -31,8 +31,9 @@ module.exports = function() {
 		
 		switch (response) {
 			case 'i'://list player inventory items
-		   		var inventory = player.getInventory().toString();
-		   		callback('Inventory: ' + inventory);
+		   		player.getInventory(function(inventory) {
+		   			callback('Inventory: ' + inventory);
+		   		});
 		   		break;
 	   		case 'o'://list user options
 	   			callback(publ.displayOptions());

@@ -1,11 +1,12 @@
 module.exports = function() {
 	var publ 		= this,
 		priv 		= {},
-		inventory	= {},
 		items		= ['flashlight'],
 		itemsUsed	= [],
 		
-		room		= require(process.cwd() + "/controllers/room");
+		inventory	= require(process.cwd() + "/models/staticInventory"),
+		room		= require(process.cwd() + "/controllers/room"),
+		db 			= require("../db");
 		
 	//check if room has item and add it to player items
 	//Add later: check if item is in response
@@ -13,19 +14,32 @@ module.exports = function() {
 		callback = callback || function () {};
 		//var splitResponse = response.split(" "),
 		//response = splitResponse[0];
-		for(var i in itemsUsed) {
-			
-		}		
+		
+		var found = false;		
 		
 		room.getAvalibleItem(currentView, function(roomHasItem, item) {
-			var i = items.indexOf(item);
-			
-			if(i == -1) {
-				items.push(item);
-				callback(item + ' added to inventroy');
-			} else {
-				callback("There's nothing for you to take");
-			}
+			inventory.getInventory(function(playerInventory) {
+				
+				for(var y in playerInventory) {
+					if(playerInventory.hasOwnProperty(y)) {
+						for(var u in playerInventory[y]) {
+							if(playerInventory[y].hasOwnProperty(u)) {
+								if(playerInventory[y][u] == item){
+									found = true;
+								}
+							}
+						}
+					}
+				}
+				
+				if(!found) {
+					db.playerInventory.insert( { item: item}, function() {
+						callback(item + ' added to inventroy');
+					});
+				} else {
+					callback("There's nothing for you to take");
+				}
+			});
 		});
 	}
 	
@@ -42,7 +56,21 @@ module.exports = function() {
 		return itemsUsed;
 	}
 	
-	publ.getInventory = function() {
-		return items;
+	publ.getInventory = function(callback) {
+		callback = callback || function () {};
+		
+		inventory.getInventory(function(playerInventory) {
+			for(var y in playerInventory) {
+				if(playerInventory.hasOwnProperty(y)) {
+					for(var u in playerInventory[y]) {
+						if(playerInventory[y].hasOwnProperty(u)) {
+							if(u == 'item')
+								items.push(playerInventory[y].item);
+						}
+					}
+				}
+			}
+			callback(items);
+		});
 	}
 };

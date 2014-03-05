@@ -94,28 +94,29 @@ module.exports = new function() {
 	publ.getAvalibleItem = function(room, callback) {
 		callback = callback || function () {};
 		
-		var playerInventory = player.getInventory(),
-			usedItems		= player.getUsedItems(),
+		var usedItems		= player.getUsedItems(),
 			itemIsUsed		= false,
 			itemInInventory = true;
-		
-		location.getItem(room, function(item) {
-			for (var i in usedItems) {
-				if(usedItems[i] === item) {
-					itemIsUsed = true;
-				}
-			}
 			
-			if(itemIsUsed){
-				itemInInventory = false;
-			} else {
-				for (var i in playerInventory) {
-					if(playerInventory[i] === item) {
-						itemInInventory = false;
+		player.getInventory(function (playerInventory) {
+			location.getItem(room, function(item) {
+				for (var i in usedItems) {
+					if(usedItems[i] === item) {
+						itemIsUsed = true;
 					}
 				}
-			}
-			callback(itemInInventory, item);
+				
+				if(itemIsUsed){
+					itemInInventory = false;
+				} else {
+					for (var i in playerInventory) {
+						if(playerInventory[i] === item) {
+							itemInInventory = false;
+						}
+					}
+				}
+				callback(itemInInventory, item);
+			});
 		});
 	}
 }
