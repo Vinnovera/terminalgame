@@ -7,7 +7,7 @@ module.exports = new function() {
 		//modules
 		location 	= new (require(process.cwd() + '/models/location')),
 		
-		db 			= require(process.cwd() + "/db"),
+	//	db 			= require(process.cwd() + "/db"),
 		promptly	= require("promptly"),
 		
 		interface 	= new (require(process.cwd() + "/view/interface")),

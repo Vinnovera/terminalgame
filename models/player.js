@@ -33,9 +33,9 @@ module.exports = function() {
 				}
 				
 				if(!found) {
-					db.playerInventory.insert( { item: item}, function() {
+					/*db.playerInventory.insert( { item: item}, function() {
 						callback(item + ' added to inventroy');
-					});
+					});*/
 				} else {
 					callback("There's nothing for you to take");
 				}

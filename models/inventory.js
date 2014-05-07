@@ -14,10 +14,10 @@ module.exports = function() {
 		priv.getFromDb = function(callback) {
 			callback = callback || function () {};
 
-			db.playerInventory.find(function(err, inventory) {
+			/*db.playerInventory.find(function(err, inventory) {
 			  if( err || !inventory) console.log("Error in inventory");
 			  
 			  callback(inventory);
-			});
+			});*/
 		}
 };

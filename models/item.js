@@ -77,10 +77,10 @@ module.exports = function() {
 	priv.getFromDb = function(itemType, callback) {
 		callback = callback || function () {};
 		
-		db.items.find({name: itemType}, function(err, items) {
+		/*db.items.find({name: itemType}, function(err, items) {
 		  if( err || !items) console.log("No item found");
 		  
 		  callback(items);
-		});
+		});*/
 	}
 };
